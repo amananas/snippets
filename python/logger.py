@@ -1,20 +1,12 @@
 import logging
 import logging.config
 
-
 ##########################################
 # Defining a valid level and callbacks in the logging utility, for greenish output
 ##########################################
-def _valid(msg, *args, **kwargs):
-    logging.log(logging.VALID, msg, *args, **kwargs)
 
-
-def _validLogger(self, msg, *args, **kwargs):
-    logging.Logger.log(self, logging.VALID, msg, *args, **kwargs)
-
-
-logging.valid = _valid
-logging.Logger.valid = _validLogger
+logging.valid = lambda msg, *args, **kwargs: logging.log(logging.VALID, msg, *args, **kwargs)
+logging.Logger.valid = lambda self, msg, *args, **kwargs: self.log(logging.VALID, msg, *args, **kwargs)
 logging.VALID = 25
 logging.addLevelName(logging.VALID, "VALIDATION")
 
