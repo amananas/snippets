@@ -1,3 +1,8 @@
+"""
+This snippets aims to configure the logging utility, to get richer behavior.
+The logging utility will then be used for both user output, and file logging, depending ont the level used.
+"""
+
 import logging
 import logging.config
 
@@ -31,17 +36,25 @@ _LOGS_FILENAME = None
 
 
 ##########################################
-# Main part
+# Filter class, as used by the logging utility
 ##########################################
 class _Filter:
 
     def __init__(self, level):
         self._level = level
 
+    def getLevel(self):
+        """ Return this filter level, accoring to the logging utility. """
+        return self._level
+
     def filter(self, log):
+        """ Filtering for the logging utility. Filter out whatever is higher than this filter level. """
         return log.levelno <= self._level
 
 
+##########################################
+# Main part
+##########################################
 _LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -148,6 +161,10 @@ _LOGGING_CONFIG = {
 
 
 def configLogging(displayDebug=False):
+    """
+    Configure the logging utility, according to this very configuration file
+    """
+
     if _LOGS_FILENAME:
         _LOGGING_CONFIG['handlers']['logsfile']['filename'] = _LOGS_FILENAME
     else:
@@ -157,5 +174,6 @@ def configLogging(displayDebug=False):
     _LOGGING_CONFIG['loggers']['']['handlers'] = [key for key in _LOGGING_CONFIG['handlers']]
     logging.config.dictConfig(_LOGGING_CONFIG)
 
-    for submodule, level in _SUBMODULES_CHANGED_LEVELS.items():
-        logging.getLogger(submodule).setLevel(level)
+    if not displayDebug:
+        for submodule, level in _SUBMODULES_CHANGED_LEVELS.items():
+            logging.getLogger(submodule).setLevel(level)
