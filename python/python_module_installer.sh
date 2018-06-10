@@ -67,7 +67,7 @@ case $1 in
         fi
         location=$(pip3 show $MODULE_NAME | grep Location | sed "s/Location: //")
         checkRemoveConfigFile $location/$MODULE_NAME/$CONFIG_FILE_DEFAULTS $CONFIG_DIR/$CONFIG_FILE_NAME
-        sudo -E pip3 uninstall mmonitor
+        sudo -E pip3 uninstall $MODULE_NAME
     	sudo -E rm $EXEC_FILE_LOCATION/$EXEC_FILE_NAME
         ;;
     *)
