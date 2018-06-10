@@ -2,6 +2,13 @@ import logging
 import logging.config
 
 ##########################################
+# Define submodules to shut down, to avoid excessive output.
+##########################################
+_SUBMODULES_CHANGED_LEVELS = {
+    'example': logging.ERROR
+}
+
+##########################################
 # Defining a valid level and callbacks in the logging utility, for greenish output
 ##########################################
 
@@ -149,3 +156,6 @@ def configLogging(displayDebug=False):
         del _LOGGING_CONFIG['handlers']['console-debug']
     _LOGGING_CONFIG['loggers']['']['handlers'] = [key for key in _LOGGING_CONFIG['handlers']]
     logging.config.dictConfig(_LOGGING_CONFIG)
+
+    for submodule, level in _SUBMODULES_CHANGED_LEVELS.items():
+        logging.getLogger(submodule).setLevel(level)
